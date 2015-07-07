@@ -1,5 +1,8 @@
+/*global module:false*/
 module.exports = function(grunt) {
   require("matchdep").filterAll("grunt-*").forEach(grunt.loadNpmTasks);
+  var webpack = require("webpack");
+  var webpack_options = require('./webpack.config.js');
 
   grunt.initConfig({
     //
@@ -7,20 +10,16 @@ module.exports = function(grunt) {
     //
 
     watch: {
-      css: {
+      webpack: {
         files: [
-          'src/styles/**/*.scss'
+          "src/**/*",
         ],
-        tasks: ['sass'],
-      },
-      scripts: {
-        files: [
-          'src/scripts/**/*.coffee'
-        ],
-        tasks: ['browserify']
+        tasks: ["webpack:build-dev"],
+        options: {
+          spawn: false,
+        }
       }
     },
-
     //
     // Clean 'dist' folder
     //
@@ -31,47 +30,30 @@ module.exports = function(grunt) {
       }
     },
 
-    browserify: {
-
-      app: {
-        files: {
-          'dist/build_app.js': [
-            'src/scripts/**/*.coffee',
-          ],
-        },
-        options: {
-          transform: ['coffeeify'],
-        }
-      }
-    },
-
-    sass: {
-      dist: {
-        files: {
-          'dist/build_app.css': 'src/styles/app.scss'
-        }
-      }
-    },
-
-
-    //
-    // Build Coffee script
-    //
-
-    coffee: {
+    webpack: {
+      options: webpack_options,
       build: {
-        expand: true,
-        options: {
-          bare: true
-        },
-        cwd: 'src',
-        src: ['**/*.coffee'],
-        dest: 'dist',
-        ext: '.js'
+        plugins: webpack_options.plugins.concat(
+          new webpack.DefinePlugin({
+            "process.env": {
+              // This has effect on the react lib size
+              "NODE_ENV": JSON.stringify("production")
+            }
+          }),
+          new webpack.optimize.DedupePlugin(),
+          new webpack.optimize.UglifyJsPlugin()
+        )
+      },
+      "build-dev": {
+        plugins: webpack_options.plugins.concat( new webpack.DefinePlugin({"process.env": { "NODE_ENV": JSON.stringify("development") } })),
+        devtool: "sourcemap",
+        debug: true
       }
-    }
+    },
+
   });
 
-  grunt.registerTask("dev", ["coffee", "watch"]);
-  grunt.registerTask("bundle", ["clean", "coffee", "browserify", "sass"]);
+
+  grunt.registerTask("build_dev_js", ["webpack:build-dev", "watch:webpack"]);
+  grunt.registerTask("build_dev", ["clean", "webpack:build"]);
 };

@@ -1,7 +1,7 @@
 React = require('react')
 
-Data        = require('./data/index.coffee')
-ReactApp    = React.createFactory(require('./app.coffee'))
+Data        = require('./data')
+ReactApp    = React.createFactory(require('./app'))
 
 # Render React UI
 #
@@ -10,7 +10,8 @@ ReactApp    = React.createFactory(require('./app.coffee'))
 # @author Sam
 #
 RenderUI = ->
-  el = document.getElementById('ReactApp')
-  React.render(ReactApp({}), el)
+  doc   = document
+  el    = doc.getElementById('ReactApp')
+  React.render(ReactApp({ data: Data[ el.dataset.isoSet ] }), el) if el
 
 module.exports = new RenderUI()
