@@ -2,8 +2,8 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   entry: {
-    'bundle'   : './src/scripts/render_ui.coffee',
-    'bundle'  : './src/styles/app.scss',
+    'bundle_js'   : './src/scripts/render_ui.coffee',
+    'bundle_css'  : './src/styles/app.scss',
   },
   output: {
     filename: "./dist/client/[name].js",

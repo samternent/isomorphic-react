@@ -11,7 +11,9 @@ ReactApp    = React.createFactory(require('./app'))
 #
 RenderUI = ->
   doc   = document
-  el    = doc.getElementById('ReactApp')
-  React.render(ReactApp({ data: Data[ el.dataset.isoSet ] }), el) if el
+  react = doc.getElementById('ReactApp')
+  app   = doc.getElementById('app')
+
+  React.render(ReactApp({ data: Data[ react.dataset.isoSet ] }), app) if app
 
 module.exports = new RenderUI()

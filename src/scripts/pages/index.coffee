@@ -37,11 +37,37 @@ Component =
   # --------------------------------------------
 
   getInitialState: ->
-    null
+    preview: null
 
   getDefaultProps: ->
 
 
+
+  _sign_request: (file, done) ->
+    xhr = new XMLHttpRequest
+    xhr.open 'GET', '/sign?file_name=' + file.name + '&file_type=' + file.type
+
+    xhr.onreadystatechange = ->
+      if xhr.readyState == 4 and xhr.status == 200
+        response = JSON.parse(xhr.responseText)
+        done response
+      return
+
+    xhr.send()
+    return
+
+  _upload: (file, signed_request, url, done) ->
+    xhr = new XMLHttpRequest
+    xhr.open 'PUT', signed_request
+    xhr.setRequestHeader 'x-amz-acl', 'public-read'
+
+    xhr.onload = ->
+      if xhr.status == 200
+        done()
+      return
+
+    xhr.send file
+    return
 
   # --------------------------------------------
   # Lifecycle Methods
@@ -56,26 +82,18 @@ Component =
   # --------------------------------------------
   # Event handlers
   # --------------------------------------------
-  _handleClick: (e) ->
-    e.preventDefault()
+  _handleChange: (e) ->
+    file = React.findDOMNode(@refs.imageUpload).files[0]
+    preview = React.findDOMNode(@refs.imagePreview)
+    return if !file
 
+    @_sign_request file, (response) =>
+      @_upload file, response.signed_request, response.url, =>
+        @setState preview : response.url
+      return
   # --------------------------------------------
   # Render methods
   # --------------------------------------------
-  _renderList: (obj, className) ->
-    list = obj.map( (item, i) =>
-      DOM.li({
-        key       : "item_#{i}"
-        className : 'nav-list__item'
-        },
-        DOM.a({
-          href    : item.path
-          onClick : @handleClick
-          }, item.title)
-        )
-      )
-
-    return DOM.ul({ className: 'nav-list' }, list)
 
   _renderHeader: ->
     DOM.header({
@@ -83,14 +101,14 @@ Component =
       },
         DOM.h1(null, @props.data.title )
         DOM.div(null, @props.data.description )
-        DOM.nav({
-          className: 'page-nav'
-          }, @_renderList(NavData))
       )
 
   render: ->
+    console.log 'go'
     DOM.div(null,
       @_renderHeader()
+      DOM.input({ ref: 'imageUpload', type: 'file', onChange: @_handleChange })
+      DOM.div({ className: 'image-preview', style: { backgroundImage: "url(#{@state.preview})" }})
     )
 
 
