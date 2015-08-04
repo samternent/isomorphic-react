@@ -1,7 +1,7 @@
 var express   = require("express"),
     app       = express(),
     path      = require('path'),
-    port      = 3333;
+    port      = process.env.PORT || 1337;
 
 
 app.set('../views', path.join(__dirname, 'views'));
