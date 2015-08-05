@@ -18,11 +18,6 @@ var myReactRoute = function (res, data) {
 };
 
 
-var S3_KEY = 'AKIAJXDOTPJHXQNEUDHA';
-var S3_SECRET = '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';
-var S3_BUCKET = 'the-album';
-var S3_REGION = 'eu-west-1';
-
 
 module.exports = function (app) {
 
