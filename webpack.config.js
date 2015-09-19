@@ -1,24 +1,22 @@
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-
+var webpack = require('webpack');
 module.exports = {
-  entry: {
-    'bundle'   : './src/scripts/render_ui.coffee',
-    'bundle'  : './src/styles/app.scss',
-  },
-  output: {
-    filename: "./dist/client/[name].js",
-  },
-  module: {
-    loaders: [
-      { test: /\.coffee$/, loader: 'coffee-loader' },
-      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") }
+    entry: [
+      'webpack/hot/only-dev-server',
+      "./client/render_ui.js"
+    ],
+    output: {
+        path: __dirname + '/dist/client',
+        filename: "bundle.js"
+    },
+    module: {
+        loaders: [
+            { test: /\.js?$/, loaders: ['react-hot', 'babel'], exclude: /node_modules/ },
+            { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+            { test: /\.css$/, loader: "style!css" }
+        ]
+    },
+    plugins: [
+      new webpack.NoErrorsPlugin()
     ]
-  },
-  plugins: [
-    new ExtractTextPlugin("./dist/client/[name].css")
-  ],
-  resolve: {
-    // you can now require('file') instead of require('file.coffee')
-    extensions: ['', '.js', '.json', '.coffee', '.scss']
-  }
+
 };

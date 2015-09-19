@@ -1,16 +1,12 @@
-var express   = require("express"),
-    app       = express(),
-    path      = require('path'),
-    port      = 3333;
 
 
-app.set('../views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+
+require('babel/register');
 
 
-require('./routes')(app);
+var React =  require('react');
+var express = require('express');
+var app = express();
+var routes = require('./routes')(app);
 
-
-app.listen(port, function () {
- console.log("Working on port " + port)
-});
+app.listen(3000);
