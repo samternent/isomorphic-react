@@ -8,13 +8,13 @@ var Flux = require('tbg-flux-factory');
 var AppStore = Flux.getStore('app');
 
 
-var ReactApp  = React.createFactory(require('../../shared/app'));
+var ReactApp  = React.createFactory(require('../../shared/app.js'));
 
 
 var myReactRoute = function (res, route) {
   AppStore.setState({ route: route });
   var reactApp = React.renderToString( ReactApp() );
-
+  
   res.render('index.ejs', {
       ReactApp  : reactApp,
       Route     : route

@@ -8,7 +8,6 @@ var AppStore = Flux.getStore('app');
 
 var ReactApp = React.createFactory(require('../shared/app'));
 
-
 window.addEventListener('popstate', function(e) {
   e.preventDefault();
   AppStore.setState({ route: e.state.route });
