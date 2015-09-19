@@ -6,7 +6,6 @@
     "start": "node server/app.js",
     "build:js": "browserify client/render_ui.js > dist/script.js",
     "watch:js": "watch build:js"
-
   },
   "author": "sam ternent",
   "dependencies": {
@@ -19,7 +18,7 @@
     "react": "^0.13.1",
     "tbg-flux-factory": "^0.2.0",
     "tbg_props_to_state": "^1.0.0",
-    "tbg_react_dom": "^0.1.0",
+    "tbg_react_dom": "^0.1.0"
   },
   "devDependencies": {
     "coffee-script": ">= 1.3",
